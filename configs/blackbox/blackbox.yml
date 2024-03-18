@@ -1,0 +1,19 @@
+modules:
+  icmp:
+    prober: icmp
+    icmp:
+      preferred_ip_protocol: ip4
+  http_2xx:
+    http:
+      no_follow_redirects: false
+      preferred_ip_protocol: ip4
+      valid_http_versions:
+      - HTTP/1.1
+      - HTTP/2.0
+      valid_status_codes: []
+      method: GET
+      follow_redirects: true
+      fail_if_ssl: false
+      fail_if_not_ssl: false
+    prober: http
+    timeout: 10s

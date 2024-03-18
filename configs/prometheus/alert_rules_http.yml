@@ -1,0 +1,42 @@
+---
+groups:
+- name: HTTP Monitors
+  rules:
+  - alert: HTTPStatusCodeForwarding
+    expr: probe_http_status_code >= 300 and probe_http_status_code < 400
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: HTTP Status code changed to 3xx {{ $labels.instance }})
+      description: "HTTP Status code changed to 3xx {{ $labels.instance }}). Current HTTP Status - {{$value}}"
+ 
+  - alert: HTTPStatusCodeError
+    expr: probe_http_status_code >= 400
+    for: 2m
+    labels:
+      severity: critical
+    annotations:
+      summary: HTTP Status code of {{ $labels.instance }} changed to Error.
+      description: "HTTP Status code of {{ $labels.instance }} changed. Current HTTP Status - {{$value}}"
+ 
+  - alert: CertToBeExpired
+    expr: ((probe_ssl_earliest_cert_expiry - time())/86400) < 10
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary:  Certificate  of {{ $labels.instance }} will be expired soon.
+      description: "Certificate  of {{ $labels.instance }} will be expired in {{$value}} days"
+
+  - alert: ShortNodeUptime
+    expr: (time() - node_boot_time_seconds) < 86400 or (time() - windows_system_system_up_time) < 86400
+    for: 2m
+    labels:
+      severity: critical
+    annotations:
+      summary: Node uptime less than 24 hrs!
+      description: "Node uptime less than 24 hrs. VALUE = {{ $value }} seconds."
+
+  
+ 
